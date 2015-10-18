@@ -16,7 +16,7 @@ int main ()
   }
   
   if (zhash_exists(hash_table, "goodbye")) {
-   printf("goodbye %s\n", (char *) zhash_get(hash_table, "goodbye"));
+    printf("goodbye %s\n", (char *) zhash_get(hash_table, "goodbye"));
   }
 
   zfree_hash_table(hash_table);
