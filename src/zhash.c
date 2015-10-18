@@ -37,11 +37,12 @@ static struct ZHashTable *zcreate_hash_table_with_size(size_t size_index)
 void zfree_hash_table(struct ZHashTable *hash_table)
 {
   size_t size, ii;
-  struct ZHashEntry *entry;
 
   size = hash_sizes[hash_table->size_index];
 
   for (ii = 0; ii < size; ii++) {
+    struct ZHashEntry *entry;
+
     if ((entry = hash_table->entries[ii])) zfree_entry(entry, true);
   }
 
@@ -94,7 +95,7 @@ void *zhash_get(struct ZHashTable *hash_table, char *key)
 void *zhash_delete(struct ZHashTable *hash_table, char *key)
 {
   size_t size, hash;
-  struct ZHashEntry *entry, *deleted_entry;
+  struct ZHashEntry *entry;
   void *val;
 
   hash = zgenerate_hash(hash_table, key);
@@ -104,6 +105,8 @@ void *zhash_delete(struct ZHashTable *hash_table, char *key)
     hash_table->entries[hash] = entry->next;
   } else {
     while (entry) {
+      struct ZHashEntry *deleted_entry;
+
       if (entry->next && strcmp(key, entry->next->key) == 0) {
         deleted_entry = entry->next;
         entry->next = entry->next->next;
@@ -181,7 +184,7 @@ size_t zgenerate_hash(struct ZHashTable *hash_table, char *key)
 void zhash_rehash(struct ZHashTable *hash_table, size_t size_index)
 {
   size_t hash, size, ii;
-  struct ZHashEntry *entry, *next_entry, **entries;
+  struct ZHashEntry **entries;
 
   if (size_index == hash_table->size_index) return;
 
@@ -192,8 +195,12 @@ void zhash_rehash(struct ZHashTable *hash_table, size_t size_index)
   hash_table->entries = zcalloc(hash_sizes[size_index], sizeof(void *));
 
   for (ii = 0; ii < size; ii++) {
+    struct ZHashEntry *entry;
+
     entry = entries[ii];
     while (entry) {
+      struct ZHashEntry *next_entry;
+
       hash = zgenerate_hash(hash_table, entry->key);
       next_entry = entry->next;
       entry->next = hash_table->entries[hash];
