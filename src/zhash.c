@@ -52,7 +52,6 @@ void zhash_set(struct ZHashTable *hash_table, char *key, void *val)
   size_t size, hash;
   struct ZHashEntry *entry;
 
-  size = hash_sizes[hash_table->size_index];
   hash = zgenerate_hash(hash_table, key);
   entry = hash_table->entries[hash];
 
@@ -69,6 +68,8 @@ void zhash_set(struct ZHashTable *hash_table, char *key, void *val)
   entry->next = hash_table->entries[hash];
   hash_table->entries[hash] = entry;
   hash_table->entry_count++;
+
+  size = hash_sizes[hash_table->size_index];
 
   if (hash_table->entry_count > size / 2) {
     zhash_rehash(hash_table, next_size_index(hash_table->size_index));
@@ -94,7 +95,6 @@ void *zhash_delete(struct ZHashTable *hash_table, char *key)
   struct ZHashEntry *entry, *deleted_entry;
   void *val;
 
-  size = hash_sizes[hash_table->size_index];
   hash = zgenerate_hash(hash_table, key);
   entry = hash_table->entries[hash];
 
@@ -117,6 +117,8 @@ void *zhash_delete(struct ZHashTable *hash_table, char *key)
   val = entry->val;
   zfree_entry(entry, false);
   hash_table->entry_count--;
+
+  size = hash_sizes[hash_table->size_index];
 
   if (hash_table->entry_count < size / 8) {
     zhash_rehash(hash_table, previous_size_index(hash_table->size_index));
