@@ -10,7 +10,6 @@
 #define COUNT_OF(arr) (sizeof(arr) / sizeof(*arr))
 #define zfree free
 
-
 // struct representing an entry in the hash table
 struct ZHashEntry {
   char *key;

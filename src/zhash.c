@@ -105,9 +105,9 @@ void *zhash_delete(struct ZHashTable *hash_table, char *key)
     hash_table->entries[hash] = entry->next;
   } else {
     while (entry) {
-      struct ZHashEntry *deleted_entry;
-
       if (entry->next && strcmp(key, entry->next->key) == 0) {
+        struct ZHashEntry *deleted_entry;
+
         deleted_entry = entry->next;
         entry->next = entry->next->next;
         entry = deleted_entry;
