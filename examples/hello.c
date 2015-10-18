@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../src/zhash.h"
 
-// gcc -Wall hello.c ../src/zhash.c
+// gcc -Wall -Wextra hello.c ../src/zhash.c
 // prints "hello world" to stdout
 int main ()
 {

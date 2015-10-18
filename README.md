@@ -22,7 +22,7 @@ The maximum number of slots is `1000000007` so performance may decrease with mor
 #include <stdio.h>
 #include "../src/zhash.h"
 
-// gcc -Wall hello.c ../src/zhash.c
+// gcc -Wall -Wextra hello.c ../src/zhash.c
 // prints "hello world" to stdout
 int main ()
 {

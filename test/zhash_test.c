@@ -119,7 +119,7 @@ static void zhash_exists_test()
   zfree_hash_table(hash_table);
 }
 
-int main(int argc, char **argv)
+int main()
 {
   zhash_set_test();
   zhash_delete_test();
