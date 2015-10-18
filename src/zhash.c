@@ -6,6 +6,8 @@
 static size_t next_size_index(size_t size_index);
 static size_t previous_size_index(size_t size_index);
 static struct ZHashTable *zcreate_hash_table_with_size(size_t size_index);
+static void *zmalloc(size_t size);
+static void *zcalloc(size_t num, size_t size);
 
 // possible sizes for hash table; must be prime numbers
 static const size_t hash_sizes[] = {
@@ -216,4 +218,26 @@ static size_t previous_size_index(size_t size_index)
   if (size_index == 0) return size_index;
 
   return size_index - 1;
+}
+
+static void *zmalloc(size_t size)
+{
+  void *ptr;
+
+  ptr = malloc(size);
+
+  if (!ptr) exit(EXIT_FAILURE);
+
+  return ptr;
+}
+
+static void *zcalloc(size_t num, size_t size)
+{
+  void *ptr;
+
+  ptr = calloc(num, size);
+
+  if (!ptr) exit(EXIT_FAILURE);
+
+  return ptr;
 }

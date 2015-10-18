@@ -8,8 +8,6 @@
 // values are void *pointers
 
 #define COUNT_OF(arr) (sizeof(arr) / sizeof(*arr))
-#define zmalloc malloc
-#define zcalloc calloc
 #define zfree free
 
 
