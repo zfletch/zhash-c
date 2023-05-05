@@ -3,8 +3,12 @@
 #include "./zhash.h"
 
 // helper functions
-static size_t next_size_index(size_t size_index);
-static size_t previous_size_index(size_t size_index);
+static struct ZHashEntry *zcreate_entry(char *key, void *val);
+static void zfree_entry(struct ZHashEntry *entry, bool recursive);
+static size_t zgenerate_hash(struct ZHashTable *hash_table, char *key);
+static void zhash_rehash(struct ZHashTable *hash_table, size_t size_index);
+static size_t znext_size_index(size_t size_index);
+static size_t zprevious_size_index(size_t size_index);
 static struct ZHashTable *zcreate_hash_table_with_size(size_t size_index);
 static void *zmalloc(size_t size);
 static void *zcalloc(size_t num, size_t size);
@@ -19,19 +23,6 @@ static const size_t hash_sizes[] = {
 struct ZHashTable *zcreate_hash_table(void)
 {
   return zcreate_hash_table_with_size(0);
-}
-
-static struct ZHashTable *zcreate_hash_table_with_size(size_t size_index)
-{
-  struct ZHashTable *hash_table;
-
-  hash_table = zmalloc(sizeof(struct ZHashTable));
-
-  hash_table->size_index = size_index;
-  hash_table->entry_count = 0;
-  hash_table->entries = zcalloc(hash_sizes[size_index], sizeof(void *));
-
-  return hash_table;
 }
 
 void zfree_hash_table(struct ZHashTable *hash_table)
@@ -75,7 +66,7 @@ void zhash_set(struct ZHashTable *hash_table, char *key, void *val)
   size = hash_sizes[hash_table->size_index];
 
   if (hash_table->entry_count > size / 2) {
-    zhash_rehash(hash_table, next_size_index(hash_table->size_index));
+    zhash_rehash(hash_table, znext_size_index(hash_table->size_index));
   }
 }
 
@@ -126,7 +117,7 @@ void *zhash_delete(struct ZHashTable *hash_table, char *key)
   size = hash_sizes[hash_table->size_index];
 
   if (hash_table->entry_count < size / 8) {
-    zhash_rehash(hash_table, previous_size_index(hash_table->size_index));
+    zhash_rehash(hash_table, zprevious_size_index(hash_table->size_index));
   }
 
   return val;
@@ -145,7 +136,20 @@ bool zhash_exists(struct ZHashTable *hash_table, char *key)
   return entry ? true : false;
 }
 
-struct ZHashEntry *zcreate_entry(char *key, void *val)
+static struct ZHashTable *zcreate_hash_table_with_size(size_t size_index)
+{
+  struct ZHashTable *hash_table;
+
+  hash_table = zmalloc(sizeof(struct ZHashTable));
+
+  hash_table->size_index = size_index;
+  hash_table->entry_count = 0;
+  hash_table->entries = zcalloc(hash_sizes[size_index], sizeof(void *));
+
+  return hash_table;
+}
+
+static struct ZHashEntry *zcreate_entry(char *key, void *val)
 {
   struct ZHashEntry *entry;
   char *key_cpy;
@@ -160,7 +164,7 @@ struct ZHashEntry *zcreate_entry(char *key, void *val)
   return entry;
 }
 
-void zfree_entry(struct ZHashEntry *entry, bool recursive)
+static void zfree_entry(struct ZHashEntry *entry, bool recursive)
 {
   if (recursive && entry->next) zfree_entry(entry->next, recursive);
 
@@ -168,7 +172,7 @@ void zfree_entry(struct ZHashEntry *entry, bool recursive)
   zfree(entry);
 }
 
-size_t zgenerate_hash(struct ZHashTable *hash_table, char *key)
+static size_t zgenerate_hash(struct ZHashTable *hash_table, char *key)
 {
   size_t size, hash;
   char ch;
@@ -181,7 +185,7 @@ size_t zgenerate_hash(struct ZHashTable *hash_table, char *key)
   return hash;
 }
 
-void zhash_rehash(struct ZHashTable *hash_table, size_t size_index)
+static void zhash_rehash(struct ZHashTable *hash_table, size_t size_index)
 {
   size_t hash, size, ii;
   struct ZHashEntry **entries;
@@ -213,14 +217,14 @@ void zhash_rehash(struct ZHashTable *hash_table, size_t size_index)
   zfree(entries);
 }
 
-static size_t next_size_index(size_t size_index)
+static size_t znext_size_index(size_t size_index)
 {
-  if (size_index == COUNT_OF(hash_sizes)) return size_index;
+  if (size_index == ZCOUNT_OF(hash_sizes)) return size_index;
 
   return size_index + 1;
 }
 
-static size_t previous_size_index(size_t size_index)
+static size_t zprevious_size_index(size_t size_index)
 {
   if (size_index == 0) return size_index;
 

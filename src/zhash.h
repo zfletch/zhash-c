@@ -7,7 +7,7 @@
 // keys are strings
 // values are void *pointers
 
-#define COUNT_OF(arr) (sizeof(arr) / sizeof(*arr))
+#define ZCOUNT_OF(arr) (sizeof(arr) / sizeof(*arr))
 #define zfree free
 
 // struct representing an entry in the hash table
@@ -34,13 +34,5 @@ void zhash_set(struct ZHashTable *hash_table, char *key, void *val);
 void *zhash_get(struct ZHashTable *hash_table, char *key);
 void *zhash_delete(struct ZHashTable *hash_table, char *key);
 bool zhash_exists(struct ZHashTable *hash_table, char *key);
-
-// hash entry creation and destruction
-struct ZHashEntry *zcreate_entry(char *key, void *val);
-void zfree_entry(struct ZHashEntry *entry, bool recursive);
-
-// other functions
-size_t zgenerate_hash(struct ZHashTable *hash, char *key);
-void zhash_rehash(struct ZHashTable *hash_table, size_t size_index);
 
 #endif
