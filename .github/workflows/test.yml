@@ -1,0 +1,19 @@
+name: Run tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Valgrind
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y valgrind
+
+      - name: Run tests
+        run: |
+          cd test/
+          ./zhash_test.sh
