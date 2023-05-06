@@ -18,6 +18,7 @@ The possible numbers of slots are all prime numbers, each size is roughly two ti
 The maximum number of slots is `1000000007` so performance may decrease with more than  `1000000007 / 2` entries.
 
 ## Example
+
 ```c
 #include <stdio.h>
 #include "../src/zhash.h"
@@ -47,6 +48,7 @@ int main ()
 ```
 
 ## Public Interface
+
 ```c
 // create hash table
 struct ZHashTable *zcreate_hash_table(void);
@@ -68,6 +70,7 @@ bool zhash_exists(struct ZHashTable *hash_table, char *key);
 ```
 
 ## Running Tests
+
 ```bash
 cd ./test
 ./zhash_test.sh
@@ -76,7 +79,6 @@ Note that the test uses a program called [Valgrind](http://valgrind.org/) to det
 leaks. On some systems, like newer versions of OSX, Valgrind will report false positives.
 
 ## Notes
-Tested on `Arch Linux 3.18.2` with `GCC 5.2.0`
 
-Also tested on `OSX 10.10.5` with `Apple LLVM version 7.0.0`.
-It works, but the Valgrind test may not be accurate.
+Tested on `Ubuntu 22.04` with `GCC 11.3.0`
+and on `macOS 13.3.1` with `Apple clang version 14.0.3`.
