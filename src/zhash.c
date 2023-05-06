@@ -166,10 +166,18 @@ static struct ZHashEntry *zcreate_entry(char *key, void *val)
 
 static void zfree_entry(struct ZHashEntry *entry, bool recursive)
 {
-  if (recursive && entry->next) zfree_entry(entry->next, recursive);
+  struct ZHashEntry *next;
 
-  zfree(entry->key);
-  zfree(entry);
+  if (!recursive) entry->next = NULL;
+
+  while (entry) {
+    next = entry->next;
+
+    zfree(entry->key);
+    zfree(entry);
+
+    entry = next;
+  }
 }
 
 static size_t zgenerate_hash(struct ZHashTable *hash_table, char *key)
