@@ -2,7 +2,11 @@
 #include <stdlib.h>
 #include "./zhash.h"
 
-// helper functions
+
+// helper macros and functions, declarations
+#define ZCOUNT_OF(arr) (sizeof(arr) / sizeof(*arr))
+#define zfree free
+
 static struct ZHashEntry *zcreate_entry(char *key, void *val);
 static void zfree_entry(struct ZHashEntry *entry, bool recursive);
 static size_t zgenerate_hash(struct ZHashTable *hash_table, char *key);
@@ -20,6 +24,7 @@ static const size_t hash_sizes[] = {
   25000009, 50000047, 104395301, 217645177, 512927357, 1000000007
 };
 
+// functions declared in zhash.h
 struct ZHashTable *zcreate_hash_table(void)
 {
   return zcreate_hash_table_with_size(0);
@@ -37,8 +42,8 @@ void zfree_hash_table(struct ZHashTable *hash_table)
     if ((entry = hash_table->entries[ii])) zfree_entry(entry, true);
   }
 
-  zfree(hash_table->entries);
-  zfree(hash_table);
+  zfree((void *) hash_table->entries);
+  zfree((void *) hash_table);
 }
 
 void zhash_set(struct ZHashTable *hash_table, char *key, void *val)
@@ -136,11 +141,12 @@ bool zhash_exists(struct ZHashTable *hash_table, char *key)
   return entry ? true : false;
 }
 
+// helper functions, definitions
 static struct ZHashTable *zcreate_hash_table_with_size(size_t size_index)
 {
   struct ZHashTable *hash_table;
 
-  hash_table = zmalloc(sizeof(struct ZHashTable));
+  hash_table = (struct ZHashTable *) zmalloc(sizeof(struct ZHashTable));
 
   hash_table->size_index = size_index;
   hash_table->entry_count = 0;
@@ -154,8 +160,8 @@ static struct ZHashEntry *zcreate_entry(char *key, void *val)
   struct ZHashEntry *entry;
   char *key_cpy;
 
-  key_cpy = zmalloc((strlen(key) + 1) * sizeof(char));
-  entry = zmalloc(sizeof(struct ZHashEntry));
+  key_cpy = (char *) zmalloc((strlen(key) + 1) * sizeof(char));
+  entry = (struct ZHashEntry *) zmalloc(sizeof(struct ZHashEntry));
 
   strcpy(key_cpy, key);
   entry->key = key_cpy;
@@ -173,8 +179,8 @@ static void zfree_entry(struct ZHashEntry *entry, bool recursive)
   while (entry) {
     next = entry->next;
 
-    zfree(entry->key);
-    zfree(entry);
+    zfree((void *) entry->key);
+    zfree((void *) entry);
 
     entry = next;
   }
@@ -222,7 +228,7 @@ static void zhash_rehash(struct ZHashTable *hash_table, size_t size_index)
     }
   }
 
-  zfree(entries);
+  zfree((void *) entries);
 }
 
 static size_t znext_size_index(size_t size_index)
