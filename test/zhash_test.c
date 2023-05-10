@@ -44,8 +44,14 @@ static void zhash_set_test()
   assert(hash_table->entry_count == size);
 
   for (ii = 0; ii < size; ii++) {
-    assert(strcmp(zhash_get(hash_table, keys[ii]), vals[ii]) == 0);
+    assert(strcmp((char *) zhash_get(hash_table, keys[ii]), vals[ii]) == 0);
   }
+
+  zhash_set(hash_table, keys[10], (void *) vals[20]);
+  zhash_set(hash_table, keys[50], (void *) vals[70]);
+
+  assert(strcmp((char *) zhash_get(hash_table, keys[10]), vals[20]) == 0);
+  assert(strcmp((char *) zhash_get(hash_table, keys[50]), vals[70]) == 0);
 
   for (ii = 0; ii < size; ii++) {
     free(keys[ii]);
@@ -85,7 +91,7 @@ static void zhash_delete_test()
     if (ii < 7 * size / 8) {
       assert(zhash_get(hash_table, keys[ii]) == NULL);
     } else {
-      assert(strcmp(zhash_get(hash_table, keys[ii]), vals[ii]) == 0);
+      assert(strcmp((char *) zhash_get(hash_table, keys[ii]), vals[ii]) == 0);
     }
   }
 

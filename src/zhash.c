@@ -1,7 +1,8 @@
-#include <string.h>
+#include <stdbool.h>
 #include <stdlib.h>
-#include "./zhash.h"
+#include <string.h>
 
+#include "./zhash.h"
 
 // helper macros and functions, declarations
 #define ZCOUNT_OF(arr) (sizeof(arr) / sizeof(*arr))

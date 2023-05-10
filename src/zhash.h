@@ -29,7 +29,7 @@ struct ZHashTable {
 struct ZHashTable *zcreate_hash_table(void);
 void zfree_hash_table(struct ZHashTable *hash_table);
 
-// hash operations
+// hash table operations
 void zhash_set(struct ZHashTable *hash_table, char *key, void *val);
 void *zhash_get(struct ZHashTable *hash_table, char *key);
 void *zhash_delete(struct ZHashTable *hash_table, char *key);
