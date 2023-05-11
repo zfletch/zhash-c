@@ -121,6 +121,7 @@ static void ziterator_test()
   size_t size, ii;
   char **keys, **vals;
   struct ZSortedHashTable *hash_table;
+  struct ZIterator *iterator;
 
   size = 100;
   hash_table = zcreate_sorted_hash_table();
@@ -138,7 +139,7 @@ static void ziterator_test()
   zsorted_hash_delete(hash_table, keys[size - 1]);
   zsorted_hash_set(hash_table, keys[90], (void *) vals[90]);
 
-  struct ZIterator *iterator = zcreate_iterator(hash_table);
+  iterator = zcreate_iterator(hash_table);
 
   for (ii = 1; ii < size - 1; ii++) {
     if (ii != 20) {
