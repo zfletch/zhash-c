@@ -69,10 +69,10 @@ void zfree_hash_table(struct ZHashTable *hash_table);
 // set key to val (if there is already a value, overwrite it)
 void zhash_set(struct ZHashTable *hash_table, char *key, void *val);
 
-// get the value stored at key (if no value, then return NULL)
+// get the value stored at key (if no value, return NULL)
 void *zhash_get(struct ZHashTable *hash_table, char *key);
 
-// delete the entry stored at key and return the value
+// delete entry stored at key and return the value (if no value, return NULL)
 void *zhash_delete(struct ZHashTable *hash_table, char *key);
 
 // return true if there is a value stored at the key and false otherwise
@@ -110,7 +110,7 @@ int main ()
   for (iterator = zcreate_iterator(hash_table);
       ziterator_exists(iterator); ziterator_next(iterator)) {
 
-    printf("%s %s\n", (char *) ziterator_get_key(iterator),
+    printf("%s %s\n", ziterator_get_key(iterator),
         (char *) ziterator_get_val(iterator));
   }
 
@@ -132,7 +132,7 @@ void *zsorted_hash_get(struct ZSortedHashTable *hash_table, char *key);
 void *zsorted_hash_delete(struct ZSortedHashTable *hash_table, char *key);
 bool zsorted_hash_exists(struct ZSortedHashTable *hash_table, char *key);
 
-// create iterator to be used in iteration functions below
+// create an iterator to be used in iteration functions below
 struct ZIterator *zcreate_iterator(struct ZSortedHashTable *hash_table);
 
 // free iterator

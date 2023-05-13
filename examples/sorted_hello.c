@@ -16,7 +16,7 @@ int main ()
   for (iterator = zcreate_iterator(hash_table);
       ziterator_exists(iterator); ziterator_next(iterator)) {
 
-    printf("%s %s\n", (char *) ziterator_get_key(iterator),
+    printf("%s %s\n", ziterator_get_key(iterator),
         (char *) ziterator_get_val(iterator));
   }
 
